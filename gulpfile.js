@@ -7,23 +7,15 @@ var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 
 var paths = {
-    js: ['jquery-offline.js'],
-    css: ['css/**/*.css']
+    js: ['angular-offline.js']
 };
-
-gulp.task('biuld:css', function () {
-    gulp.src(paths.css)
-        .pipe(concat('style.min.css'))
-        .pipe(cssmin())
-        .pipe(gulp.dest('./dist/css'));
-});
 
 gulp.task('biuld:js', function() {
     gulp.src(paths.js)
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(uglify())
-        .pipe(concat('jquery-offline.min.js'))
+        .pipe(concat('angular-offline.min.js'))
         .pipe(gulp.dest('./dist/js/'));
 });
 
@@ -31,17 +23,16 @@ gulp.task('biuld:js_dev', function() {
     gulp.src(paths.js)
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(concat('jquery-offline.src.js'))
+        .pipe(concat('angular-offline.src.js'))
         .pipe(gulp.dest('./dist/js/'));
 });
 
 // Watch Files For Changes
 gulp.task('watch', function() {
-    gulp.start('biuld:css', 'biuld:js', 'biuld:js_dev');
-    gulp.watch(paths.css[0], ['compass']);
+    gulp.start('biuld:js', 'biuld:js_dev');
     gulp.watch(paths.js[0], ['biuld:js_dev', 'biuld:js']);
 });
 
 gulp.task('default', function() {
-    gulp.start('biuld:css', 'biuld:js', 'biuld:js_dev');
+    gulp.start('biuld:js', 'biuld:js_dev');
 });

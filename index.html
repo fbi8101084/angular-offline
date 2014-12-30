@@ -2,20 +2,20 @@
 <html>
 <head lang="tw">
     <meta charset="UTF-8">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script type="text/javascript" src="jquery-offline.js"></script>
-    <title>jQuery Offline Demo</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+    <script type="text/javascript" src="angular-offline.js"></script>
+    <title>Angular Offline Demo</title>
 </head>
-<body>
+<body ng-app="index" ng-controller="DemoCtrl" novalidate>
     <form name="registerForm" onsubmit="return false">
-        <p><input type="text"   class="form-item" name="userName"      placeholder="輸入姓名" value="123"></p>
-        <p><input type="number" class="form-item" name="phone"         placeholder="輸入電話" value="123"></p>
-        <p><input type="date"   class="form-item" name="birthday"      placeholder="輸入生日" value="2014-12-12"></p>
-        <p><input type="text"   class="form-item" name="address"       placeholder="輸入地址" value="123"></p>
-        <p><textarea            class="form-item" name="myFavorite"    placeholder="我的興趣">123</textarea></p>
+        <p><input type="text"   class="form-item" name="userName"   ng-model="data.userName"     placeholder="輸入姓名"></p>
+        <p><input type="number" class="form-item" name="phone"      ng-model="data.phone"        placeholder="輸入電話"></p>
+        <p><input type="date"   class="form-item" name="birthday"   ng-model="data.birthday"     placeholder="輸入生日"></p>
+        <p><input type="text"   class="form-item" name="address"    ng-model="data.address"      placeholder="輸入地址"></p>
+        <p><textarea            class="form-item" name="myFavorite" ng-model="data.myFavorite"   placeholder="我的興趣"></textarea></p>
 
         <p>
-            <button type="button" id="submit">註冊</button>
+            <button type="button" ng-click="func.submit()">註冊</button>
             <button type="button">取消</button>
         </p>
     </form>
@@ -24,31 +24,33 @@
         <pre></pre>
     </div>
     <script>
-        (function ($) {
-            $('#submit').on('click', function () {
-//                console.log($('form[name=registerForm]').serialize());
-                var data = {};
-                $('.form-item').each(function (index, item) {
-                    data[item.name] = $(item).val();
-                });
+        (function () {
+            var app = angular.module('index', ['offline']);
+            app.controller('DemoCtrl', ['$scope', 'offlineHelper', function ($scope, offlineHelper) {
+                $scope.data = {
+                    userName: '123',
+                    phone: 123,
+                    birthday: new Date('2014-11-12'),
+                    address: '123',
+                    myFavorite: '123'
+                };
 
-//                $.offline('ajax', {
-//                    type: 'post',
-//                    url: 'send.php',
-//                    data: data
-//                })
+                $scope.func = {
+                    submit: function () {
+                        var aa = offlineHelper.offline('ajax', 'send.php', {
+                            type: 'post',
+                            data: $scope.data
+                        }).then(function (res) {
+                            console.log(arguments);
+                        });
 
-                var aa = $.offline('get', 'send.php', data)
-//                $.offline('delete', 'send.php', data)
-//                $.offline('put', 'send.php', data)
-//                $.offline('post', 'send.php', data)
-                .done(function (response) {
-                    console.log(response);
-                });
 
-                console.log(aa);
-            });
-        })(jQuery);
+                    }
+                };
+
+
+            }]);
+        })();
     </script>
 </body>
 </html>
