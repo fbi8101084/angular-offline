@@ -1,0 +1,15 @@
+{
+  "name": "jquery-offline",
+  "version": "1.0.0",
+  "description": "Project Startup",
+  "private": true,
+  "devDependencies": {
+    "gulp": "~3.8.5",
+    "gulp-concat": "~2.2.0",
+    "gulp-jshint": "^1.8.4",
+    "jshint-stylish": "^0.4.0",
+    "gulp-uglify": "~0.3.1",
+    "gulp-util": "~2.2.19",
+    "gulp-minify-css": "git://github.com/jonathanepollack/gulp-minify-css"
+  }
+}
