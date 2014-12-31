@@ -26,7 +26,6 @@
              * */
             Offline.prototype.offConfig = function () {
                 return {
-                    accessStatus: [500, 404], // 如果 httpStatus 是 500 或 404 就會進行本機端暫存
                     message: 'Network not connect, data has saved in localStorage.',
                     key: '',
                     checkTime: this.checkTime
@@ -63,20 +62,13 @@
 
                         // don't need to do callback
                         _this.main('ajax', opts).then(function (response) {
-                            if (!_this.checkIsAccessStatus(response.status, opts)) {
+                            if (!response.isOffline) {
                                 _this.removeKeyFromList(opts.offConfig.key);
                                 _this.networkIsConnect = true;
                             }
                         });
                     });
                 }
-            };
-
-            /*
-             * 判斷狀態是否符合陣列中的狀態，符合的話將定義為離線
-             * */
-            Offline.prototype.checkIsAccessStatus = function (status, opts) {
-                return -1 !== opts.offConfig.accessStatus.indexOf(status);
             };
 
             /*
@@ -89,7 +81,7 @@
                 if (0 <= index) {
                     localStorage.removeItem(key);
                     _this.cacheList.splice(index, 1);
-                    localStorage.cacheList = JSON.stringify(_this.cacheList);
+                    localStorage.jqOffline = JSON.stringify(_this.cacheList);
                     return true;
                 }
 
@@ -167,23 +159,18 @@
                     url = undefined;
                 }
 
-                opts = angular.extend({ offConfig: _this.offConfig() }, opts);
+                opts.offConfig = angular.extend(_this.offConfig(), opts.offConfig || {});
 
                 // for $http
                 opts.method = opts.method || opts.type;
 
                 $http(opts).success(function (response, status) {
-                    if (_this.checkIsAccessStatus(status, opts)) {
-                        opts.offConfig.status = status;
-                        _this.saveDataInLocal(opts);
-                        d.resolve(opts.offConfig);
-                    } else {
-                        d.resolve.apply(_this, arguments);
-                    }
+                    d.resolve.apply(_this, arguments);
                 }).error(function (response, status) {
-                    if (_this.checkIsAccessStatus(status, opts)) {
+                    if (0 === status) {
                         opts.offConfig.status = status;
                         _this.saveDataInLocal(opts);
+                        opts.offConfig.isOffline = true;
                         d.resolve(opts.offConfig);
                     } else {
                         d.reject.apply(_this, arguments);
