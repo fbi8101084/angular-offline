@@ -172,7 +172,7 @@
                         _this.saveDataInLocal(opts);
                         _this.networkIsConnect = false;
                         opts.offConfig.isOffline = true;
-                        d.resolve(opts.offConfig);
+                        d.resolve(opts.offConfig, status);
                     } else {
                         d.reject.apply(_this, arguments);
                     }
@@ -184,7 +184,7 @@
             /*
              * 主要 router 介面，供使用者使用，根據 method 將程式導向所需功能。
              * */
-            Offline.prototype.main = function (method) {
+            Offline.prototype.main = function (method, url, opts) {
                 var _this = this;
 
                 switch (method) {
@@ -200,7 +200,7 @@
                         break;
 
                     case 'setCheckTime':
-                        var num = parseInt(arguments[1]);
+                        var num = parseInt(url);
 
                         if (num && (0 < num)) {
                             _this.checkTime = num;
@@ -220,16 +220,13 @@
                         return _this.delete.apply(_this, arguments);
 
                     case 'ajax':
-                        var opts;
-                        switch (arguments.length) {
-                            case 2:
-                                opts = arguments[1];
-                                return _this.ajax.call(_this, opts);
-
-                            case 3:
-                                opts = arguments[2];
-                                opts.url = arguments[1];
-                                return _this.ajax.call(_this, opts);
+                        if ('object' === typeof url) {
+                            opts = url;
+                            url = undefined;
+                            return _this.ajax.call(_this, opts);
+                        } else {
+                            opts.url = url;
+                            return _this.ajax.call(_this, opts);
                         }
                 }
             };
