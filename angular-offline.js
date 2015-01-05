@@ -170,6 +170,7 @@
                     if (0 === status) {
                         opts.offConfig.status = status;
                         _this.saveDataInLocal(opts);
+                        _this.networkIsConnect = false;
                         opts.offConfig.isOffline = true;
                         d.resolve(opts.offConfig);
                     } else {
