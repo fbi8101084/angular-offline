@@ -16,7 +16,7 @@ gulp.task('biuld:js', function() {
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(uglify())
         .pipe(concat('angular-offline.min.js'))
-        .pipe(gulp.dest('./dist/js/'));
+        .pipe(gulp.dest('./dist/'));
 });
 
 // Watch Files For Changes
