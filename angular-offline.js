@@ -164,7 +164,7 @@
                 // for $http
                 opts.method = opts.method || opts.type;
 
-                $http(opts).success(function (response, status) {
+                $http(opts).success(function () {
                     d.resolve.apply(_this, arguments);
                 }).error(function (response, status) {
                     if (0 === status) {
