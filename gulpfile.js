@@ -19,20 +19,12 @@ gulp.task('biuld:js', function() {
         .pipe(gulp.dest('./dist/js/'));
 });
 
-gulp.task('biuld:js_dev', function() {
-    gulp.src(paths.js)
-        .pipe(jshint())
-        .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(concat('angular-offline.src.js'))
-        .pipe(gulp.dest('./dist/js/'));
-});
-
 // Watch Files For Changes
 gulp.task('watch', function() {
-    gulp.start('biuld:js', 'biuld:js_dev');
-    gulp.watch(paths.js[0], ['biuld:js_dev', 'biuld:js']);
+    gulp.start('biuld:js');
+    gulp.watch(paths.js[0], ['biuld:js']);
 });
 
 gulp.task('default', function() {
-    gulp.start('biuld:js', 'biuld:js_dev');
+    gulp.start('biuld:js');
 });
